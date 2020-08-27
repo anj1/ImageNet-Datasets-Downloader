@@ -74,7 +74,7 @@ if args.class_list_format:
             if wnid in class_info_dict:
                 classes_to_scrape.append(wnid)
             else:
-                logging.error(f'Class {item} ({wnid}) not found in ImageNet; skipping...')
+                logging.warning(f'Class {item} ({wnid}) not found in ImageNet; skipping...')
 
 else:
     potential_class_pool = []
