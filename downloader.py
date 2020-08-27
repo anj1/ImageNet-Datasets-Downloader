@@ -71,10 +71,10 @@ if args.class_list_format:
                     exit()
                 synset = synset_list[0]
             wnid = "n{:08d}".format(synset.offset())
-            classes_to_scrape.append(wnid)
-            if wnid not in class_info_dict:
-                logging.error(f'Class {wnid} not found in ImageNet')
-                exit()
+            if wnid in class_info_dict:
+                classes_to_scrape.append(wnid)
+            else:
+                logging.error(f'Class {item} ({wnid}) not found in ImageNet; skipping...')
 
 else:
     potential_class_pool = []
