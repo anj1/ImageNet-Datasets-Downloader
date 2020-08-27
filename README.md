@@ -25,11 +25,20 @@ The following command will download 500 images from each of selected class:
 ```
 python ./downloader.py 
     -data_root /data_root_folder/imagenet \
-    -use_class_list True \
+    -class_list_format wnid \
     -class_list n09858165 n01539573 n03405111 \
     -images_per_class 500 
 ```
 You can find class list in [this csv](https://github.com/mf1024/ImageNet-datasets-downloader/blob/master/classes_in_imagenet.csv) where I list every class that appear in the ImageNet with number of total urls and total flickr urls it that class.
+
+You can also use words as class labels; the first match in ImageNet will be used:
+```
+python ./downloader.py 
+    -data_root /data_root_folder/imagenet \
+    -class_list_format word \
+    -class_list black_belt sparrow furnace_room \
+    -images_per_class 500 
+```
 
 # Multiprocessing workers 
 

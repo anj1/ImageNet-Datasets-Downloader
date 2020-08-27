@@ -8,6 +8,8 @@ import time
 import logging
 import csv
 
+from nltk.corpus import wordnet as wn
+
 from multiprocessing import Pool, Process, Value, Lock
 
 from requests.exceptions import ConnectionError, ReadTimeout, TooManyRedirects, MissingSchema, InvalidURL
@@ -17,7 +19,7 @@ parser.add_argument('-scrape_only_flickr', default=True, type=lambda x: (str(x).
 parser.add_argument('-number_of_classes', default = 10, type=int)
 parser.add_argument('-images_per_class', default = 10, type=int)
 parser.add_argument('-data_root', default='' , type=str)
-parser.add_argument('-use_class_list', default=False,type=lambda x: (str(x).lower() == 'true'))
+parser.add_argument('-class_list_format', default=False,type=str, help="Can be either 'word' (e.g. 'dog') or 'wnid' ('n02084071')")
 parser.add_argument('-class_list', default=[], nargs='*')
 parser.add_argument('-debug', default=False,type=lambda x: (str(x).lower() == 'true'))
 
@@ -51,14 +53,26 @@ with open(class_info_json_filepath) as class_info_json_f:
 
 classes_to_scrape = []
 
-if args.use_class_list == True:
-   for item in args.class_list:
-       classes_to_scrape.append(item)
-       if item not in class_info_dict:
-           logging.error(f'Class {item} not found in ImageNete')
-           exit()
+if args.class_list_format:
+    if args.class_list_format == 'wnid':
+        for item in args.class_list:
+            classes_to_scrape.append(item)
+            if item not in class_info_dict:
+                logging.error(f'Class {item} not found in ImageNet')
+                exit()
+    if args.class_list_format == 'word':
+        for item in args.class_list:
+            wnid_list = wn.synsets(item)
+            if len(wnid_list)==0:
+                logging.error(f'Could not find matching WNID for {item}')
+                exit()
+            wnid = "n{:08d}".format(wnid_list[0].offset())
+            classes_to_scrape.append(wnid)
+            if wnid not in class_info_dict:
+                logging.error(f'Class {wnid} not found in ImageNet')
+                exit()
 
-elif args.use_class_list == False:
+else:
     potential_class_pool = []
     for key, val in class_info_dict.items():
 
@@ -78,6 +92,9 @@ elif args.use_class_list == False:
 
     for idx in picked_classes_idxes:
         classes_to_scrape.append(potential_class_pool[idx])
+
+
+        
 
 
 print("Picked the following clases:")
