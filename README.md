@@ -40,6 +40,15 @@ python ./downloader.py
     -images_per_class 500 
 ```
 
+Or you can provide the word.n.number directly:
+```
+python ./downloader.py 
+    -data_root /data_root_folder/imagenet \
+    -class_list_format word_number \
+    -class_list dog.n.01 sparrow.n.02 zebra.n.01 \
+    -images_per_class 500 
+```
+
 # Multiprocessing workers 
 
 I've implementet parallel request processing and I've added **multiprocessing_workers parameter** which by default is 8. You can turn it higher, but I havent yet tested the limits of flickr allowed bandwith myself, so use it with care and you will have to find the limits yourself if you want to go for the maximum speed.
