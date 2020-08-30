@@ -338,13 +338,13 @@ def get_image(img_url):
 for class_wnid in classes_to_scrape:
 
     class_name = class_info_dict[class_wnid]["class_name"]
-    print(f'Scraping images for class \"{class_name}\"')
+    print(f'Scraping images for class \"{class_name}\" ({class_wnid})')
     url_urls = IMAGENET_API_WNID_TO_URLS(class_wnid)
 
     time.sleep(0.05)
     resp = requests.get(url_urls)
 
-    class_folder = os.path.join(imagenet_images_folder, class_name)
+    class_folder = os.path.join(imagenet_images_folder, class_wnid)
     if not os.path.exists(class_folder):
         os.mkdir(class_folder)
 
